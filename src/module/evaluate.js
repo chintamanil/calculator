@@ -7,8 +7,7 @@ import {binaryAnd, binaryOr, binaryXor } from './../operations/binaryOperations'
  */
 function Evaluate(allOperations) {
     this.allOperations = allOperations.split('');
-    this.order = ['!' , '/*%' , '+-' , '&' , '^' , '|'];
-    this.result = null;
+    this.order = [ '/*%' , '+-' , '&' , '^' , '|'];
 }
 
 /**
@@ -22,23 +21,34 @@ Evaluate.prototype.solve = function() {
         '/': division,
         '*': multiplication
     };
+
+    let results = null;
+
     var orderLength = this.order.length;
     for (let i = 0; i < orderLength; i++) {
-        var currentOrder = this.order[i];
+        let currentOrder = this.order[i];
         for (let j = 0; j <= this.allOperations.length; j++) {
-            var currentOperation = this.allOperations[j];
+            let currentOperation = this.allOperations[j];
             if (currentOperation.indexOf(currentOrder) > -1) {
+                // if operation is "!" we dont need below
                 let previousNumber = this.allOperations[j - 1];
                 let nextNumber = this.allOperations[j + 1];
-                this.result += _operationsMap[currentOperation](previousNumber, nextNumber);
+                results += _operationsMap[currentOperation](previousNumber, nextNumber);
                 this.allOperations.splice(j - 1, 3);
+
+                // check this.allOperations length;
                 j -= 2; // not 3
             }
         }
     }
-    return this.results;
+    return results;
 };
 
+/**
+ * [setOperations description]
+ *
+ * @param {[type]} allOperations [description]
+ */
 Evaluate.prototype.setOperations = function(allOperations) {
     this.allOperations = allOperations;
 };
