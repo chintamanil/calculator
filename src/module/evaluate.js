@@ -7,7 +7,7 @@ import {binaryAnd, binaryOr, binaryXor } from './../operations/binaryOperations'
  */
 function Evaluate(allOperations) {
     this.allOperations = allOperations.split('');
-    this.order = [ '/*%' , '+-' , '&' , '^' , '|'];
+    this.order = [ '/*' , '+-' , '&' , '^' , '|'];
 }
 
 /**
@@ -19,7 +19,10 @@ Evaluate.prototype.solve = function() {
         '+': addition,
         '-': substraction,
         '/': division,
-        '*': multiplication
+        '*': multiplication,
+        '&': binaryAnd,
+        '|': binaryOr,
+        '^': binaryXor
     };
 
     let results = null;

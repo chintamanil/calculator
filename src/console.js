@@ -2,7 +2,7 @@
 
     var prompt = require('prompt');
     var colors = require('colors/safe');
-    var evaluate = require('./module/evaluate.js');
+    var Evaluate = require('./module/evaluate.js');
 
     prompt.delimiter = colors.green('>');
     prompt.message = '';
@@ -19,7 +19,7 @@
             } else {
                     let currentEvaluation
                     if(!currentEvaluation){
-                        currentEvaluation = new evaluate(result.w);
+                        currentEvaluation = new Evaluate(result.w);
                     }else{
                         currentEvaluation.setOperations(result.w);
                     }
