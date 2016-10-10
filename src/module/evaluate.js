@@ -30,14 +30,12 @@ Evaluate.prototype.solve = function() {
         for (let j = 0; j <= this.allOperations.length; j++) {
             let currentOperation = this.allOperations[j];
             if (currentOperation.indexOf(currentOrder) > -1) {
-                // if operation is "!" we dont need below
+                // if operation is "!" we dont need below & j is reduced by 1
                 let previousNumber = this.allOperations[j - 1];
                 let nextNumber = this.allOperations[j + 1];
                 results += _operationsMap[currentOperation](previousNumber, nextNumber);
                 this.allOperations.splice(j - 1, 3);
-
-                // check this.allOperations length;
-                j -= 2; // not 3
+                j -= 3;
             }
         }
     }
