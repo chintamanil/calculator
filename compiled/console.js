@@ -1,4 +1,4 @@
-(function() {
+(function () {
 
     var prompt = require('prompt');
     var colors = require('colors/safe');
@@ -13,17 +13,16 @@
     function ask() {
         console.log('---------------------------------------------------------------------');
         console.log('Enter: "END" to exit');
-        prompt.get(['w'], function(err, result) {
+        prompt.get(['w'], function (err, result) {
             if (result.w === 'END') {
                 console.log('We are done.');
             } else {
-                    currentEvaluation.setOperations(result.w);
-                    let answer = currentEvaluation.solve();
-                    console.log(`Result of  ${result.w} is = ${answer}`);
-                    ask();
-                }
+                currentEvaluation.setOperations(result.w);
+                let answer = currentEvaluation.solve();
+                console.log(`Result of  ${ result.w } is = ${ answer }`);
+                ask();
+            }
         });
     }
     ask();
-
 })();

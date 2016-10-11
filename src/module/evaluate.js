@@ -1,57 +1,75 @@
-import { addition, substraction, division, multiplication } from './../operations/arithmaticOperations';
-import {binaryAnd, binaryOr, binaryXor } from './../operations/binaryOperations';
+var arithmaticOperations = require('./../operations/arithmaticOperations.js');
+var binaryOperations = require('./../operations/binaryOperations.js');
 
 // TODO use try catch here
 /**
  * @return {[type]}        [description]
  */
-function Evaluate(allOperations) {
-    this.allOperations = allOperations.split('');
-    this.order = [ '/*' , '+-' , '&' , '^' , '|'];
-}
+class Evaluate {
+    constructor() {
+        this.allOperations = [];
+        this.order = ['!', '/*', '+-', '&', '^', '|'];
+    }
 
-/**
- * [solve description]
- */
-Evaluate.prototype.solve = function() {
+    solve() {
 
-    let _operationsMap = {
-        '+': addition,
-        '-': substraction,
-        '/': division,
-        '*': multiplication,
-        '&': binaryAnd,
-        '|': binaryOr,
-        '^': binaryXor
-    };
+        let _operationsMap = {
+            '+': arithmaticOperations.addition,
+            '-': arithmaticOperations.substraction,
+            '/': arithmaticOperations.division,
+            '*': arithmaticOperations.multiplication,
+            '&': binaryOperations.binaryAnd,
+            '|': binaryOperations.binaryOr,
+            '^': binaryOperations.binaryXor,
+            '!': binaryOperations.binaryNot
+        };
 
-    let results = null;
-
-    var orderLength = this.order.length;
-    for (let i = 0; i < orderLength; i++) {
-        let currentOrder = this.order[i];
-        for (let j = 0; j <= this.allOperations.length; j++) {
-            let currentOperation = this.allOperations[j];
-            if (currentOperation.indexOf(currentOrder) > -1) {
-                // if operation is "!" we dont need below & j is reduced by 1
-                let previousNumber = this.allOperations[j - 1];
-                let nextNumber = this.allOperations[j + 1];
-                results += _operationsMap[currentOperation](previousNumber, nextNumber);
-                this.allOperations.splice(j - 1, 3);
-                j -= 3;
+        var results = false;
+        var orderLength = this.order.length;
+        for (let i = 0; i < orderLength; i++) {
+            let currentOrder = this.order[i];
+            let allOperationsLength = this.allOperations.length;
+            for (let currentOperatingIndex = 0; currentOperatingIndex < this.allOperations.length - 1; currentOperatingIndex++) {
+                let currentOperation = this.allOperations[currentOperatingIndex];
+                // console.log(currentOperation, currentOperation.indexOf(currentOrder), currentOrder)
+                if (currentOrder.indexOf(currentOperation) > -1) {
+                    // if operation is "!" we dont need below & currentOperatingIndex is reduced by 1
+                    if (currentOrder === '!') {
+                        results += _operationsMap[currentOperation](this.allOperations[currentOperatingIndex + 1]);
+                    } else {
+                        let nextNumber = this.allOperations[currentOperatingIndex + 1];
+                        let previousNumber = this.allOperations[currentOperatingIndex - 1];
+                        let currentResult = _operationsMap[currentOperation](previousNumber, nextNumber);
+                        this.allOperations.splice(currentOperatingIndex - 1, 3, currentResult);
+                        currentOperatingIndex -= 2;
+                        console.log(this.allOperations, 'all');
+                    }
+                }
             }
         }
-    }
-    return results;
-};
+        return this.allOperations[0];
+    };
 
-/**
- * [setOperations description]
- *
- * @param {[type]} allOperations [description]
- */
-Evaluate.prototype.setOperations = function(allOperations) {
-    this.allOperations = allOperations;
-};
+    setOperations(allOperations) {
+        var currentNumber = [];
+        this.allOperations = [];
+        for (let i = 0; i < allOperations.length; i++) {
+            let current = allOperations[i];
+            if (isNaN(Number(current))) {
+                if (currentNumber.length) {
+                    this.allOperations.push(currentNumber.join(''));
+                }
+                this.allOperations.push(current);
+                currentNumber = [];
+            } else {
+                currentNumber.push(current);
+            }
+        }
+        this.allOperations.push(currentNumber.join(''));
+        //    console.log(this.allOperations)
+        currentNumber = [];
+    };
+
+}
 
 module.exports = Evaluate;
